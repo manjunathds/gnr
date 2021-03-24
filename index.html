@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Management Web Service</title>
+    <link rel="shortcut icon" href="src/img/favicon.png" type="image/png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- openlayer css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="src/css/custom.css">
+</head>
+<body>
+    <div class="row">
+        <!-- As a link -->
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color:#e3f2fd;">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+              <img src="src/img/favicon.png" alt="" width="5%">
+              Waste Management Web Service
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            </nav>
+          </nav>
+    </div>
+    <div class="mt-5 container custom-border">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="wms-tab" data-toggle="tab" href="#wms" role="tab" aria-controls="home" aria-selected="true">WMS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="wfs-tab" data-toggle="tab" href="#wfs" role="tab" aria-controls="profile" aria-selected="false">WFS</a>
+            </li>
+            
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="wms" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form id="wmsform">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Available URLs</label>
+                              <select class="form-control" name="url" id="urls" required>
+                                  <option value="" disabled selected>Select an option</option>
+                                  <option value="https://inspire.apambiente.pt/getogc/services/INSPIRE/AM_Residuos/MapServer/WMSServer">www.inspire.apambiente.pt</option>
+                                  <option value="https://catalogue.ceh.ac.uk/maps/c89cc9a0-dcfa-11e3-8b68-0800200c9a66">catalogue.ceh.ac.uk 1</option>
+                                  <option value="https://catalogue.ceh.ac.uk/maps/cca47088-8cdd-4d7a-86b4-90f0a1766364">catalogue.ceh.ac.uk 2</option>
+                                  <option value="https://catalogue.ceh.ac.uk/maps/2be6d1c5-7b82-4d83-9291-defa59aa8aae">catalogue.ceh.ac.uk 3</option>
+                              </select>
+                            </div>
+                            <div class="form-group">
+                              <label for="requsts">Available Requests</label>
+                              <select class="form-control" name="requests" id="requests" required>
+                                  <option value="" disabled selected>Select an option</option>
+                              </select>
+                            </div>                            
+                            <div class="form-group">
+                              <label for="srs">Available SRS</label>
+                              <select class="form-control" name="srs" id="srs" required>
+                                  <option value="" disabled selected>Select an option</option>
+                              </select>
+                            </div>
+                            <div class="form-group">
+                              <label for="layers">Layers</label>
+                              <select class="form-control" name="layers" id="layers" required>
+                                  <option value="" disabled selected>Select an option</option>
+                              </select>
+                            </div>
+                            <div class="form-group">
+                              <label for="bounding-box">Bounding box</label>
+                              <div class="row">
+                                <div class="col">
+                                  <input name="minx" readonly type="text" class="form-control" id="minx">
+                                </div>
+                                <div class="col">
+                                  <input name="miny" readonly type="text" class="form-control" id="miny">
+                                </div>
+                                <div class="col">
+                                  <input name="maxx" readonly type="text" class="form-control" id="maxx">
+                                </div>
+                                <div class="col">
+                                  <input name="maxy" readonly type="text" class="form-control" id="maxy">
+                                </div>
+                              </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                          </form>
+                    </div>
+                    <div class="col-md-6">
+                      <div id="wms_map" class="map" style="height: 400px;width: 100%;">
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="wfs" role="tabpanel" aria-labelledby="profile-tab">
+              <div class="row">
+                <div class="col-md-6">
+                    <form id="wfs_form">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Available URLs</label>
+                          <select class="form-control" name="wfs_url" id="wfs_urls" >
+                              <option value="" disabled selected>Select an option</option>
+                              <option value="https://idem.madrid.org/geoidem/ServiciosPublicos/ows?service=wfs&request=getCapabilities">ServiciosPublicos</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="requsts">Available Requests</label>
+                          <select class="form-control" name="wfs_requests" id="wfs_requests">
+                              <option value="" disabled selected>Select an option</option>                              
+                          </select>
+                        </div>                            
+                        <div class="form-group">
+                          <label for="srs">Available Features</label>
+                          <select class="form-control" name="feature" id="features">
+                              <option value="" disabled selected>Here comes the Features</option>                              
+                          </select>
+                        </div>
+                        <!-- <div class="form-group">
+                          <label for="layers">Feature ID</label>
+                          <select class="form-control" name="wfs_feature" id="wfs_feature">
+                              <option value="" disabled selected>Select an option</option>                              
+                          </select>
+                        </div>                         -->
+                        <!-- <div class="form-group">
+                          <label for="bounding-box">Bounding box</label>
+                          <div class="row">
+                            <div class="col">
+                              <input name="wfs_bounding_box" type="text" class="form-control" id="wfs_bounding-box1">
+                            </div>
+                            <div class="col">
+                              <input name="wfs_bounding_box" type="text" class="form-control" id="wfs_bounding-box2">
+                            </div>
+                            <div class="col">
+                              <input name="wfs_bounding_box" type="text" class="form-control" id="wfs_bounding-box3">
+                            </div>
+                            <div class="col">
+                              <input name="wfs_bounding_box" type="text" class="form-control" id="wfs_bounding-box4">
+                            </div>
+                          </div>
+                        </div> -->
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </form>
+                </div>
+                <div class="col-md-6">
+                  <div id="wfs_info" class="info" style="height: 400px;width: 100%;">
+                        <h3 id="feature_title"></h3>
+                        <p id="feature_abstract"></p>
+                  </div>
+                </div>
+            </div>
+            </div>
+          </div>
+    </div>
+    <footer class="bg-dark text-white text-center text-lg-start">
+      <!-- Grid container -->
+      <div class="container p-4">
+        <!--Grid row-->
+        <div class="row">    
+          <!--Grid column-->
+          <div class="col-lg-6">
+            <h5 class="text-uppercase mb-0">Acknowledgement</h5>
+            <p>
+              We express our immense thanks to <strong>Prof.Surya Durbha</strong>, Professor, Centre for Study in Resource Engineering
+              IIT Bombay and <strong>Rajat Chandrashekar Shinde</strong>, PhD Scholar for support and guidance through out this project.
+            </p>
+
+          </div>
+          <!--Grid column-->
+    
+          <!--Grid column-->
+          <div class="col-lg-3">
+            <h5 class="text-uppercase">Shreelakshmi C R </h5>
+            <p>M Tech Student</p>
+            <p>Centre for Study in Resource Engineering<br>IIT Bombay</p>
+            <p>203310002@iitb.ac.in</p>
+          </div>
+          <!--Grid column-->
+    
+          <!--Grid column-->
+          <div class="col-lg-3">
+            <h5 class="text-uppercase mb-0">Vishnu Jayan</h5>
+            <p>M Tech Student</p>
+            <p>Centre for Technology Alternatives for Rural Areas<br>IIT Bombay</P>
+              <p>visnu.j@iitb.ac.in</p></p>
+          </div>
+          <!--Grid column-->
+        </div>
+        <!--Grid row-->
+      </div>
+      <!-- Grid container -->
+    
+      <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        © 2020 Copyright:
+        <a class="text-dark" href="">Vishnu Jayan & Shreelekshmi</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
+    <!-- scripts -->   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <!-- openlayer script -->
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
+    <script src="src/js/wms_xmlparser.js"></script>
+    <script src="src/js/wfs_xmlparser.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
