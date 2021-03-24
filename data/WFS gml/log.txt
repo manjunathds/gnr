@@ -1,0 +1,3 @@
+Warning 1: Layer name 'IITB collection points' adjusted to 'IITB_collection_points' for XML validity.
+Warning 1: Field name 'Waste gene' adjusted to 'Waste_gene' to be a valid
+XML element name.
